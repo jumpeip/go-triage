@@ -1,0 +1,292 @@
+# Known Go modules. Used (1) to attribute packages to third-party code when build info is
+# missing or stripped, and (2) to flag notable dual-use / offensive libraries.
+# import-path-prefix<TAB>class (library|dual-use|offensive)<TAB>capabilities (comma list or -)<TAB>description
+#
+# ---------------------------------------------------------------- common libraries
+golang.org/x/sys	library	-	OS interfaces (x/sys)
+golang.org/x/net	library	-	extended networking (x/net)
+golang.org/x/crypto	library	-	extended crypto (x/crypto)
+golang.org/x/text	library	-	text processing (x/text)
+golang.org/x/sync	library	-	sync helpers
+golang.org/x/term	library	-	terminal helpers
+golang.org/x/time	library	-	rate limiting
+golang.org/x/oauth2	library	-	OAuth2 client
+golang.org/x/exp	library	-	experimental packages
+golang.org/x/mod	library	-	module helpers
+golang.org/x/tools	library	-	Go tools
+golang.org/x/image	library	-	image processing
+google.golang.org/protobuf	library	SERIALIZATION	protobuf runtime
+google.golang.org/grpc	library	NETWORK	gRPC
+google.golang.org/genproto	library	-	generated protos
+google.golang.org/api	library	HTTP	Google APIs client
+cloud.google.com/go	library	HTTP	Google Cloud SDK
+github.com/golang/protobuf	library	SERIALIZATION	legacy protobuf
+github.com/gogo/protobuf	library	SERIALIZATION	gogo protobuf
+github.com/spf13/cobra	library	-	CLI framework
+github.com/spf13/pflag	library	-	flag parsing
+github.com/spf13/viper	library	-	configuration
+github.com/spf13/afero	library	-	filesystem abstraction
+github.com/urfave/cli	library	-	CLI framework
+github.com/alecthomas/kingpin	library	-	CLI framework
+github.com/alecthomas/chroma	library	-	syntax highlighting
+github.com/sirupsen/logrus	library	-	logging
+go.uber.org/zap	library	-	logging
+go.uber.org/multierr	library	-	errors
+go.uber.org/atomic	library	-	atomics
+github.com/rs/zerolog	library	-	logging
+github.com/pkg/errors	library	-	errors
+github.com/hashicorp/go-multierror	library	-	errors
+github.com/hashicorp/errwrap	library	-	errors
+github.com/hashicorp/go-version	library	-	versions
+github.com/hashicorp/go-cleanhttp	library	HTTP	HTTP clients
+github.com/hashicorp/go-retryablehttp	library	HTTP	retrying HTTP client
+github.com/hashicorp/hcl	library	-	HCL parsing
+github.com/stretchr/testify	library	-	testing
+github.com/google/uuid	library	-	UUIDs
+github.com/gofrs/uuid	library	-	UUIDs
+github.com/satori/go.uuid	library	-	UUIDs
+github.com/google/go-cmp	library	-	comparisons
+github.com/google/shlex	library	-	shell lexing
+github.com/mattn/go-isatty	library	-	TTY detection
+github.com/mattn/go-colorable	library	-	coloured output
+github.com/mattn/go-runewidth	library	-	rune width
+github.com/fatih/color	library	-	coloured output
+github.com/charmbracelet	library	-	TUI framework
+github.com/muesli	library	-	terminal styling
+github.com/lucasb-eyer/go-colorful	library	-	colours
+github.com/rivo/uniseg	library	-	unicode segmentation
+github.com/briandowns/spinner	library	-	spinner
+github.com/schollz/progressbar	library	-	progress bar
+github.com/cheggaaa/pb	library	-	progress bar
+github.com/AlecAivazis/survey	library	-	prompts
+github.com/manifoldco/promptui	library	-	prompts
+github.com/gorilla/mux	library	LISTENER	HTTP router
+github.com/gin-gonic/gin	library	LISTENER	web framework
+github.com/labstack/echo	library	LISTENER	web framework
+github.com/gofiber/fiber	library	LISTENER	web framework
+github.com/valyala/fasthttp	library	HTTP	fast HTTP
+github.com/go-resty/resty	library	HTTP	HTTP client
+github.com/imroc/req	library	HTTP	HTTP client
+github.com/parnurzeal/gorequest	library	HTTP	HTTP client
+github.com/PuerkitoBio/goquery	library	HTTP	HTML scraping
+github.com/gocolly/colly	library	HTTP	web scraping
+github.com/json-iterator/go	library	SERIALIZATION	JSON
+github.com/goccy/go-json	library	SERIALIZATION	JSON
+github.com/tidwall/gjson	library	SERIALIZATION	JSON querying
+github.com/buger/jsonparser	library	SERIALIZATION	JSON
+gopkg.in/yaml	library	SERIALIZATION	YAML
+github.com/ghodss/yaml	library	SERIALIZATION	YAML
+sigs.k8s.io/yaml	library	SERIALIZATION	YAML
+github.com/BurntSushi/toml	library	SERIALIZATION	TOML
+github.com/pelletier/go-toml	library	SERIALIZATION	TOML
+github.com/vmihailenco/msgpack	library	SERIALIZATION	msgpack
+github.com/klauspost/compress	library	COMPRESSION	compression
+github.com/klauspost/cpuid	library	-	CPU features
+github.com/golang/snappy	library	COMPRESSION	snappy
+github.com/pierrec/lz4	library	COMPRESSION	LZ4
+github.com/ulikunitz/xz	library	COMPRESSION	xz
+github.com/andybalholm/brotli	library	COMPRESSION	brotli
+github.com/dsnet/compress	library	COMPRESSION	compression
+github.com/mholt/archiver	dual-use	ARCHIVE	archiving (exfil staging)
+github.com/mholt/archives	dual-use	ARCHIVE	archiving (exfil staging)
+github.com/alexmullins/zip	dual-use	ARCHIVE,CRYPTO_SYMMETRIC	encrypted zip
+github.com/yeka/zip	dual-use	ARCHIVE,CRYPTO_SYMMETRIC	encrypted zip
+github.com/aws/aws-sdk-go	library	HTTP	AWS SDK
+github.com/aws/aws-sdk-go-v2	library	HTTP	AWS SDK v2
+github.com/aws/smithy-go	library	HTTP	AWS SDK
+github.com/Azure	library	HTTP	Azure SDK
+github.com/minio/minio-go	dual-use	HTTP	S3 client (exfil to buckets)
+github.com/jlaffaye/ftp	dual-use	NETWORK	FTP client (exfil)
+github.com/pkg/sftp	dual-use	SSH	SFTP client
+github.com/go-sql-driver/mysql	library	DATABASE	MySQL driver
+github.com/lib/pq	library	DATABASE	PostgreSQL driver
+github.com/jackc/pgx	library	DATABASE	PostgreSQL driver
+go.mongodb.org/mongo-driver	library	DATABASE	MongoDB driver
+github.com/go-redis/redis	library	DATABASE	Redis client
+github.com/redis/go-redis	library	DATABASE	Redis client
+gorm.io	library	DATABASE	ORM
+github.com/mattn/go-sqlite3	dual-use	DATABASE,CGO	SQLite (browser credential DB access)
+modernc.org/sqlite	dual-use	DATABASE	pure-Go SQLite (browser credential DB access)
+modernc.org	library	-	modernc support libs (libc, mathutil...)
+github.com/glebarez/go-sqlite	dual-use	DATABASE	pure-Go SQLite
+github.com/syndtr/goleveldb	dual-use	DATABASE	LevelDB (Discord/Chromium local storage)
+github.com/prometheus	library	-	metrics
+github.com/beorn7/perks	library	-	metrics
+github.com/cespare/xxhash	library	HASH	xxhash
+github.com/dgryski	library	-	hashing / algorithms
+github.com/emirpasic/gods	library	-	data structures
+github.com/patrickmn/go-cache	library	-	cache
+github.com/hashicorp/golang-lru	library	-	LRU cache
+github.com/dustin/go-humanize	library	-	formatting
+github.com/robfig/cron	library	SLEEP	cron scheduler
+github.com/go-co-op/gocron	library	SLEEP	scheduler
+github.com/fsnotify/fsnotify	library	FILE_ENUM	file watching
+github.com/kardianos/service	dual-use	SERVICE,PERSISTENCE	cross-platform service install (persistence)
+github.com/kardianos/osext	library	RECON	executable path
+github.com/inconshreveable/go-update	dual-use	FILE_WRITE	self-update
+github.com/minio/selfupdate	dual-use	FILE_WRITE	self-update
+github.com/blang/semver	library	-	semver
+github.com/Masterminds	library	-	semver / templates
+github.com/cli/go-gh	library	HTTP	GitHub CLI helpers
+github.com/google/go-github	library	HTTP	GitHub API client
+github.com/shurcooL	library	-	GraphQL / misc
+github.com/go-git/go-git	library	NETWORK	git implementation
+github.com/microsoft/go-mssqldb	library	DATABASE	MSSQL driver
+github.com/denisenkom/go-mssqldb	library	DATABASE	MSSQL driver
+github.com/tc-hib/winres	library	-	Windows resources
+github.com/josephspurrier/goversioninfo	library	-	Windows version info
+github.com/akavel/rsrc	library	-	Windows resources
+github.com/lxn/walk	library	-	Windows GUI
+github.com/lxn/win	dual-use	WINAPI_DYNAMIC	Win32 API bindings
+github.com/getlantern/systray	library	-	tray icon
+fyne.io/fyne	library	-	GUI toolkit
+github.com/wailsapp/wails	library	-	desktop app framework
+github.com/zserge/lorca	library	-	Chrome UI
+github.com/sqweek/dialog	library	-	dialogs
+github.com/gen2brain/beeep	library	-	notifications
+github.com/skratchdot/open-golang	library	EXEC	opens URLs/files
+github.com/pkg/browser	library	EXEC	opens browser
+# ---------------------------------------------------------------- dual-use (frequent in malware)
+github.com/gorilla/websocket	dual-use	WEBSOCKET	WebSocket (common C2 transport)
+nhooyr.io/websocket	dual-use	WEBSOCKET	WebSocket
+github.com/coder/websocket	dual-use	WEBSOCKET	WebSocket
+github.com/gobwas/ws	dual-use	WEBSOCKET	WebSocket
+github.com/quic-go/quic-go	dual-use	NETWORK	QUIC transport
+github.com/lucas-clemente/quic-go	dual-use	NETWORK	QUIC transport (old path)
+github.com/miekg/dns	dual-use	DNS	DNS library (DNS C2 / tunnelling)
+github.com/google/gopacket	dual-use	NETWORK	packet capture / crafting
+github.com/hashicorp/yamux	dual-use	PROXY_TUNNEL	stream multiplexing (tunnels / reverse proxies)
+github.com/xtaci/smux	dual-use	PROXY_TUNNEL	stream multiplexing
+github.com/xtaci/kcp-go	dual-use	PROXY_TUNNEL	KCP reliable UDP (tunnels)
+github.com/armon/go-socks5	dual-use	PROXY_TUNNEL	SOCKS5 server
+github.com/things-go/go-socks5	dual-use	PROXY_TUNNEL	SOCKS5 server
+github.com/txthinking/socks5	dual-use	PROXY_TUNNEL	SOCKS5
+github.com/haxii/socks5	dual-use	PROXY_TUNNEL	SOCKS5
+golang.org/x/net/proxy	dual-use	PROXY_TUNNEL	SOCKS proxy dialer
+github.com/elazarl/goproxy	dual-use	PROXY_TUNNEL	HTTP(S) MITM proxy
+github.com/refraction-networking/utls	dual-use	TLS	TLS fingerprint spoofing (JA3 evasion)
+github.com/cretz/bine	dual-use	PROXY_TUNNEL	Tor control / embedded Tor
+github.com/ipsn/go-libtor	dual-use	PROXY_TUNNEL	embedded Tor
+github.com/Psiphon-Labs	dual-use	PROXY_TUNNEL	Psiphon circumvention
+golang.org/x/crypto/ssh	dual-use	SSH	SSH client/server
+github.com/gliderlabs/ssh	dual-use	SSH,LISTENER	SSH server
+github.com/creack/pty	dual-use	SHELL	pseudo-terminal (interactive shell)
+github.com/iamacarpet/go-winpty	dual-use	SHELL	Windows pseudo-terminal
+github.com/UserExistsError/conpty	dual-use	SHELL	ConPTY interactive shell
+github.com/kbinani/screenshot	dual-use	SCREEN_CAPTURE	screenshots
+github.com/vova616/screenshot	dual-use	SCREEN_CAPTURE	screenshots
+github.com/go-vgo/robotgo	dual-use	SCREEN_CAPTURE,KEYLOG,CLIPBOARD	desktop automation
+github.com/atotto/clipboard	dual-use	CLIPBOARD	clipboard
+golang.design/x/clipboard	dual-use	CLIPBOARD	clipboard
+golang.design/x/hotkey	dual-use	KEYLOG	global hotkeys
+github.com/moutend/go-hook	dual-use	KEYLOG	keyboard/mouse hooks
+github.com/MarinX/keylogger	dual-use	KEYLOG	Linux keylogger
+github.com/eiannone/keyboard	dual-use	KEYLOG	keyboard input
+github.com/robotn/gohook	dual-use	KEYLOG	global event hook
+github.com/StackExchange/wmi	dual-use	WMI	WMI queries
+github.com/yusufpapurcu/wmi	dual-use	WMI	WMI queries
+github.com/go-ole/go-ole	dual-use	WMI	COM/OLE automation
+github.com/capnspacehook/taskmaster	dual-use	SCHEDULED_TASK	Task Scheduler API
+github.com/hirochachacha/go-smb2	dual-use	SMB	SMB2/3 client
+github.com/stacktitan/smb	dual-use	SMB	SMB client
+github.com/go-ldap/ldap	dual-use	LDAP	LDAP / AD queries
+gopkg.in/ldap	dual-use	LDAP	LDAP / AD queries
+github.com/jcmturner/gokrb5	dual-use	KERBEROS	Kerberos client
+github.com/masterzen/winrm	dual-use	EXEC,NETWORK	WinRM remote execution
+github.com/Microsoft/go-winio	dual-use	NAMED_PIPE	named pipes / Windows I/O
+github.com/go-telegram-bot-api/telegram-bot-api	dual-use	CHAT_C2	Telegram bot (C2 / exfil)
+github.com/go-telegram/bot	dual-use	CHAT_C2	Telegram bot
+gopkg.in/telebot	dual-use	CHAT_C2	Telegram bot
+gopkg.in/tucnak/telebot	dual-use	CHAT_C2	Telegram bot
+github.com/tucnak/telebot	dual-use	CHAT_C2	Telegram bot
+github.com/bwmarrin/discordgo	dual-use	CHAT_C2	Discord bot (C2 / exfil)
+github.com/slack-go/slack	dual-use	CHAT_C2	Slack API
+github.com/nlopes/slack	dual-use	CHAT_C2	Slack API
+github.com/mattermost	dual-use	CHAT_C2	Mattermost
+github.com/wneessen/go-mail	dual-use	NETWORK	SMTP mail (exfil)
+gopkg.in/gomail	dual-use	NETWORK	SMTP mail (exfil)
+gopkg.in/mail	dual-use	NETWORK	SMTP mail (exfil)
+github.com/emersion/go-imap	dual-use	NETWORK	IMAP client
+github.com/billgraziano/dpapi	dual-use	CREDENTIAL_ACCESS	DPAPI decryption
+github.com/danieljoos/wincred	dual-use	CREDENTIAL_ACCESS	Windows credential manager
+github.com/zalando/go-keyring	dual-use	CREDENTIAL_ACCESS	OS keyring access
+github.com/keybase/go-keychain	dual-use	CREDENTIAL_ACCESS	macOS keychain
+github.com/99designs/keyring	dual-use	CREDENTIAL_ACCESS	OS keyring access
+github.com/shirou/gopsutil	dual-use	RECON,PROCESS_ENUM	host / process info
+github.com/mitchellh/go-ps	dual-use	PROCESS_ENUM	process list
+github.com/elastic/go-sysinfo	dual-use	RECON	host info
+github.com/denisbrodbeck/machineid	dual-use	RECON	machine id
+github.com/jaypipes/ghw	dual-use	RECON	hardware info
+github.com/klauspost/cpuid/v2	library	-	CPU features
+github.com/projectdiscovery	dual-use	NETWORK,RECON	scanning toolkit (nuclei, httpx, subfinder...)
+github.com/Ullaakut/nmap	dual-use	RECON	nmap wrapper
+github.com/malfunkt/iprange	dual-use	RECON	IP range parsing (scanners)
+github.com/OJ/gobuster	dual-use	HTTP,RECON	brute forcer
+github.com/ffuf/ffuf	dual-use	HTTP,RECON	web fuzzer
+github.com/hillu/go-yara	dual-use	-	YARA bindings
+github.com/fatedier/frp	dual-use	PROXY_TUNNEL	frp reverse proxy (frequent in intrusions)
+github.com/fatedier/golib	dual-use	PROXY_TUNNEL	frp support library
+github.com/jpillora/chisel	dual-use	PROXY_TUNNEL	chisel TCP/UDP tunnel over HTTP
+github.com/jpillora/backoff	library	-	backoff
+github.com/nicocha30/ligolo-ng	offensive	PROXY_TUNNEL	ligolo-ng tunnelling
+github.com/sysdream/ligolo	offensive	PROXY_TUNNEL	ligolo tunnelling
+github.com/ginuerzh/gost	dual-use	PROXY_TUNNEL	GOST tunnel
+github.com/go-gost	dual-use	PROXY_TUNNEL	GOST v3 tunnel
+github.com/xtls/xray-core	dual-use	PROXY_TUNNEL	Xray proxy core
+github.com/v2fly/v2ray-core	dual-use	PROXY_TUNNEL	V2Ray proxy core
+github.com/sagernet/sing-box	dual-use	PROXY_TUNNEL	sing-box proxy
+github.com/sagernet	dual-use	PROXY_TUNNEL	sing-box components
+github.com/shadowsocks/go-shadowsocks2	dual-use	PROXY_TUNNEL	Shadowsocks
+github.com/txthinking/brook	dual-use	PROXY_TUNNEL	Brook proxy
+github.com/inconshreveable/ngrok	dual-use	PROXY_TUNNEL	ngrok tunnel
+golang.ngrok.com/ngrok	dual-use	PROXY_TUNNEL	ngrok agent SDK
+github.com/cloudflare/cloudflared	dual-use	PROXY_TUNNEL	Cloudflare tunnel
+github.com/wzshiming	dual-use	PROXY_TUNNEL	proxy libraries
+github.com/xmrig	dual-use	CRYPTOMINING	miner
+# ---------------------------------------------------------------- offensive frameworks / tradecraft
+github.com/bishopfox/sliver	offensive	EXEC,NETWORK,INJECTION	Sliver C2 implant
+github.com/BishopFox/sliver	offensive	EXEC,NETWORK,INJECTION	Sliver C2 implant
+github.com/Ne0nd0g/merlin	offensive	EXEC,NETWORK,INJECTION	Merlin C2 agent
+github.com/Ne0nd0g/merlin-agent	offensive	EXEC,NETWORK,INJECTION	Merlin C2 agent
+github.com/Ne0nd0g/merlin-message	offensive	NETWORK	Merlin C2 messages
+github.com/Ne0nd0g/go-clr	offensive	CLR	CLR hosting (execute-assembly)
+github.com/ropnop/go-clr	offensive	CLR	CLR hosting (execute-assembly)
+github.com/its-a-feature/Mythic	offensive	NETWORK	Mythic agent
+github.com/MythicAgents	offensive	EXEC,NETWORK	Mythic agent (Poseidon, Merlin...)
+github.com/gophish/gophish	offensive	HTTP	phishing framework
+github.com/kgretzky/evilginx2	offensive	PROXY_TUNNEL,CREDENTIAL_ACCESS	phishing reverse proxy
+github.com/C-Sto/BananaPhone	offensive	SYSCALL_DIRECT	direct syscalls (Hell's Gate)
+github.com/f1zm0/acheron	offensive	SYSCALL_DIRECT	indirect syscalls
+github.com/timwhitez	offensive	SYSCALL_DIRECT,INJECTION	offensive Go tooling (Doge-*, Frog-*)
+github.com/D00MFist/Go4aRun	offensive	INJECTION	PPID spoofing / injection
+github.com/Binject/debug	offensive	PE_LOAD	PE/ELF/Mach-O manipulation
+github.com/Binject/go-donut	offensive	PE_LOAD,INJECTION	Donut shellcode generator
+github.com/Binject/binjection	offensive	PE_LOAD,INJECTION	binary backdooring
+github.com/Binject/universal	offensive	PE_LOAD	reflective loading
+github.com/awgh/rawreader	offensive	MEMORY_MANIPULATION	raw memory reader (reflective loaders)
+github.com/Ne0nd0g/go-shellcode	offensive	INJECTION	shellcode loaders
+github.com/brimstone/go-shellcode	offensive	INJECTION	shellcode runner
+github.com/Ne0nd0g/oddments	offensive	INJECTION	offensive helpers
+github.com/salukikit	offensive	INJECTION	offensive helpers
+github.com/optiv/ScareCrow	offensive	INJECTION,DEFENSE_EVASION	EDR-evasion loader framework
+github.com/optiv/Freeze	offensive	INJECTION,DEFENSE_EVASION	suspended-process loader
+github.com/optiv/Mangle	offensive	DEFENSE_EVASION	binary mangler
+github.com/optiv/Ivy	offensive	INJECTION	VBA payload loader
+github.com/Tylous	offensive	INJECTION,DEFENSE_EVASION	ScareCrow / Freeze author tooling
+github.com/mvdan/garble	offensive	DEFENSE_EVASION	garble obfuscator
+mvdan.cc/garble	offensive	DEFENSE_EVASION	garble obfuscator
+github.com/burrowers/garble	offensive	DEFENSE_EVASION	garble obfuscator
+github.com/unixpickle/gobfuscate	offensive	DEFENSE_EVASION	gobfuscate obfuscator
+github.com/C-Sto/goWMIExec	offensive	WMI,EXEC	WMI exec (lateral movement)
+github.com/sensepost	offensive	NETWORK	offensive tooling
+github.com/ropnop/kerbrute	offensive	KERBEROS	Kerberos brute force
+github.com/ropnop	offensive	KERBEROS	offensive AD tooling
+github.com/lkarlslund/adalanche	offensive	LDAP	AD attack graph
+github.com/oiweiwei/go-msrpc	dual-use	SMB,EXEC	MS-RPC (DCERPC) client
+github.com/C-Sto/gosecretsdump	offensive	CREDENTIAL_ACCESS	secretsdump (NTDS)
+github.com/jfjallid/go-secdump	offensive	CREDENTIAL_ACCESS	remote SAM/LSA dumping
+github.com/0xrawsec	dual-use	-	Windows tooling
+github.com/moonD4rk/HackBrowserData	offensive	BROWSER_DATA,CREDENTIAL_ACCESS	browser credential stealer
+github.com/moond4rk/hackbrowserdata	offensive	BROWSER_DATA,CREDENTIAL_ACCESS	browser credential stealer
+github.com/0xAX	offensive	-	misc offensive
+github.com/goss-org	library	-	server validation

@@ -1,0 +1,68 @@
+/* ###
+ * Builds the GoTriage Ghidra extension.
+ *
+ *   gradle -PGHIDRA_INSTALL_DIR=D:\ghidra_12.2_PUBLIC
+ *
+ * or set the GHIDRA_INSTALL_DIR environment variable. The installable zip is written to dist\.
+ */
+
+//----------------------START "DO NOT MODIFY" SECTION------------------------------
+def ghidraInstallDir
+
+if (System.env.GHIDRA_INSTALL_DIR) {
+	ghidraInstallDir = System.env.GHIDRA_INSTALL_DIR
+}
+else if (project.hasProperty("GHIDRA_INSTALL_DIR")) {
+	ghidraInstallDir = project.getProperty("GHIDRA_INSTALL_DIR")
+}
+else {
+	ghidraInstallDir = "<path to ghidra install>"
+}
+
+task distributeExtension {
+	group = "Ghidra"
+
+	apply from: new File(ghidraInstallDir).getCanonicalPath() + "/support/buildExtension.gradle"
+	dependsOn ':buildExtension'
+}
+//----------------------END "DO NOT MODIFY" SECTION-------------------------------
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// No external dependencies - everything comes from the Ghidra installation.
+}
+
+// Bundle the knowledge base into the jar as a fallback (the data/ folder is also shipped
+// alongside the extension so analysts can edit it).
+processResources {
+	from('data') {
+		into 'gotriage/data'
+	}
+}
+
+// Standalone CLI jar (core + cli only; no Ghidra dependencies)
+task cliJar(type: Jar) {
+	group = "Ghidra"
+	archiveBaseName = 'go-triage-cli'
+	destinationDirectory = file('dist')
+	from(sourceSets.main.output) {
+		include 'gotriage/core/**'
+		include 'gotriage/cli/**'
+		include 'gotriage/data/**'
+	}
+	manifest {
+		attributes('Main-Class': 'gotriage.cli.GoTriageCli')
+	}
+}
+cliJar.dependsOn classes
+buildExtension.dependsOn cliJar
+
+// Exclude additional files from the built extension
+buildExtension.exclude '.gradle/**'
+buildExtension.exclude 'build/**'
+buildExtension.exclude 'dist/**'
+buildExtension.exclude 'tools/**'
+buildExtension.exclude 'out/**'

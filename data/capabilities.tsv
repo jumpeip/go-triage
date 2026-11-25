@@ -1,0 +1,65 @@
+# capability<TAB>risk weight (0-40)<TAB>description
+# Weights feed the per-function risk score; edit to taste.
+NETWORK	6	Raw network connections (net.Dial and friends)
+HTTP	8	HTTP client/server traffic
+DNS	5	DNS lookups (possible DNS C2 / tunnelling)
+TLS	4	TLS connections
+LISTENER	10	Opens a listening socket / server (bind shell, proxy, implant listener)
+WEBSOCKET	10	WebSocket channel (common C2 transport)
+PROXY_TUNNEL	18	SOCKS/tunnel/multiplexing/Tor (pivoting, reverse proxy)
+EXEC	18	Starts processes
+SHELL	15	Shell / LOLBin command lines
+FILE_READ	3	Reads files
+FILE_WRITE	5	Writes / creates / renames files
+FILE_DELETE	8	Deletes files
+FILE_ENUM	8	Walks directories / enumerates files
+CRYPTO_SYMMETRIC	10	Symmetric encryption (AES, RC4, ChaCha20, DES...)
+CRYPTO_ASYMMETRIC	8	Public-key crypto (RSA, ECDH, embedded keys)
+HASH	2	Hashing / HMAC / CRC
+ENCODING	3	Base64 / hex / base32 encoding
+SERIALIZATION	1	JSON / gob / protobuf serialisation
+COMPRESSION	3	Compression
+ARCHIVE	6	Zip/tar archiving (staging for exfiltration)
+DATABASE	8	Embedded database access (SQLite: browser data theft)
+REGISTRY	10	Windows registry access
+PERSISTENCE	25	Autostart / persistence locations
+SERVICE	12	Windows service control
+SCHEDULED_TASK	18	Scheduled task creation
+WINAPI_DYNAMIC	12	Dynamic Windows API resolution (LazyDLL/GetProcAddress)
+SYSCALL_DIRECT	20	Direct syscalls from non-runtime code
+MEMORY_MANIPULATION	18	Allocates / re-protects executable memory
+INJECTION	30	Process injection primitives
+PROCESS_ENUM	10	Process enumeration
+PROCESS_KILL	12	Terminates processes
+PRIVILEGE	18	Token / privilege manipulation
+RECON	8	Host reconnaissance (hostname, user, interfaces, system info)
+ENV	3	Environment variable access
+ANTI_ANALYSIS	20	Debugger / VM / sandbox / AV checks
+DEFENSE_EVASION	22	Disables or hides from defences
+SCREEN_CAPTURE	20	Screenshots
+KEYLOG	30	Keystroke capture
+CLIPBOARD	15	Clipboard access
+CREDENTIAL_ACCESS	30	Credential theft (DPAPI, key files, credential stores)
+BROWSER_DATA	25	Browser profile data (cookies, saved logins)
+CRYPTO_WALLET	25	Cryptocurrency wallet theft
+CHAT_C2	22	Telegram/Discord/Slack bots or webhooks (C2 / exfil)
+EXFIL_SERVICE	20	File-sharing / paste / webhook services
+IMPACT	30	Destructive / ransomware indicators
+CRYPTOMINING	25	Cryptocurrency mining
+MUTEX	6	Named mutex (single-instance check)
+NAMED_PIPE	10	Named pipes (SMB/pipe C2, lateral movement)
+SLEEP	3	Sleeps / tickers (beaconing)
+RANDOM	1	Randomness
+WMI	10	WMI / COM queries
+SSH	10	SSH client/server
+SMB	15	SMB client (lateral movement)
+LDAP	12	LDAP / Active Directory queries
+KERBEROS	15	Kerberos tooling
+SELF_DELETE	20	Self-deletion / melt
+PLUGIN_LOAD	10	Loads Go plugins at runtime
+PE_LOAD	15	Parses / loads PE images (reflective loaders)
+CLR	25	Hosts the .NET CLR (execute-assembly)
+EMBED	4	Reads embedded files (staged payloads)
+CGO	2	cgo / native interop
+USER_AGENT	3	Hard-coded HTTP User-Agent
+NETWORK_IOC	8	Hard-coded URL / IP / onion address

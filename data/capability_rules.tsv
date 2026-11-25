@@ -1,0 +1,222 @@
+# Callee rules: when a function calls something matching <match>, it gains <capability>.
+#   func:<prefix>   prefix of the callee's full Go symbol name
+#   pkg:<path>      callee package equals <path> or is below it
+#   re:<regex>      Java regex searched in the callee's full name
+# match<TAB>capability<TAB>note
+#
+# ---- process execution
+func:os/exec.Command	EXEC	os/exec.Command
+func:os/exec.(*Cmd).	EXEC	os/exec Cmd.Run/Start/Output
+func:os.StartProcess	EXEC	os.StartProcess
+func:syscall.StartProcess	EXEC	syscall.StartProcess
+func:syscall.ForkExec	EXEC	syscall.ForkExec
+func:syscall.Exec	EXEC	syscall.Exec (replace process image)
+func:syscall.CreateProcess	EXEC	CreateProcess
+func:golang.org/x/sys/windows.CreateProcess	EXEC	CreateProcess
+func:golang.org/x/sys/windows.ShellExecute	EXEC	ShellExecute
+func:golang.org/x/sys/unix.Exec	EXEC	unix.Exec
+# ---- network
+func:net.Dial	NETWORK	net.Dial*
+func:net.(*Dialer).Dial	NETWORK	net.Dialer
+func:net.(*TCPConn).	NETWORK	TCP connection I/O
+func:net.(*UDPConn).	NETWORK	UDP connection I/O
+func:net.Listen	LISTENER	net.Listen*
+func:net.(*ListenConfig).Listen	LISTENER	net.ListenConfig
+func:net.(*TCPListener).Accept	LISTENER	accepts connections
+func:net.Lookup	DNS	net.Lookup*
+func:net.(*Resolver).	DNS	net.Resolver
+func:net.Interfaces	RECON	network interfaces
+func:net.InterfaceAddrs	RECON	interface addresses
+func:net/http.(*Client).	HTTP	http.Client
+func:net/http.Get	HTTP	http.Get
+func:net/http.Post	HTTP	http.Post / PostForm
+func:net/http.Head	HTTP	http.Head
+func:net/http.NewRequest	HTTP	http.NewRequest
+func:net/http.ListenAndServe	LISTENER	HTTP server
+func:net/http.(*Server).	LISTENER	HTTP server
+func:net/http.HandleFunc	LISTENER	HTTP handler registration
+func:net/http/httputil.NewSingleHostReverseProxy	PROXY_TUNNEL	reverse proxy
+func:net/smtp.	NETWORK	SMTP (mail exfiltration)
+func:net/rpc.	NETWORK	net/rpc
+func:crypto/tls.Dial	TLS	tls.Dial
+func:crypto/tls.Client	TLS	tls.Client
+func:crypto/tls.Server	TLS	tls.Server
+func:crypto/tls.Listen	LISTENER	tls.Listen
+func:crypto/tls.(*Conn).Handshake	TLS	TLS handshake
+# ---- crypto
+func:crypto/aes.NewCipher	CRYPTO_SYMMETRIC	AES
+func:crypto/cipher.New	CRYPTO_SYMMETRIC	cipher modes (GCM/CBC/CTR/CFB/OFB)
+func:crypto/rc4.	CRYPTO_SYMMETRIC	RC4
+func:crypto/des.	CRYPTO_SYMMETRIC	DES/3DES
+pkg:golang.org/x/crypto/chacha20	CRYPTO_SYMMETRIC	ChaCha20
+pkg:golang.org/x/crypto/chacha20poly1305	CRYPTO_SYMMETRIC	ChaCha20-Poly1305
+pkg:golang.org/x/crypto/salsa20	CRYPTO_SYMMETRIC	Salsa20
+pkg:golang.org/x/crypto/blowfish	CRYPTO_SYMMETRIC	Blowfish
+pkg:golang.org/x/crypto/twofish	CRYPTO_SYMMETRIC	Twofish
+pkg:golang.org/x/crypto/xtea	CRYPTO_SYMMETRIC	XTEA
+pkg:golang.org/x/crypto/nacl	CRYPTO_SYMMETRIC	NaCl box/secretbox
+func:crypto/rsa.	CRYPTO_ASYMMETRIC	RSA
+func:crypto/ecdh.	CRYPTO_ASYMMETRIC	ECDH
+func:crypto/ecdsa.	CRYPTO_ASYMMETRIC	ECDSA
+func:crypto/ed25519.	CRYPTO_ASYMMETRIC	Ed25519
+pkg:golang.org/x/crypto/curve25519	CRYPTO_ASYMMETRIC	Curve25519
+func:crypto/x509.ParsePKIXPublicKey	CRYPTO_ASYMMETRIC	parses embedded public key
+func:crypto/x509.ParsePKCS	CRYPTO_ASYMMETRIC	parses embedded key
+func:encoding/pem.Decode	CRYPTO_ASYMMETRIC	decodes PEM (embedded key/cert)
+func:crypto/sha1.	HASH	SHA-1
+func:crypto/sha256.	HASH	SHA-256
+func:crypto/sha512.	HASH	SHA-512
+func:crypto/md5.	HASH	MD5
+func:crypto/hmac.	HASH	HMAC
+func:hash/crc32.	HASH	CRC32
+pkg:golang.org/x/crypto/pbkdf2	HASH	PBKDF2
+pkg:golang.org/x/crypto/scrypt	HASH	scrypt
+pkg:golang.org/x/crypto/argon2	HASH	Argon2
+func:crypto/rand.	RANDOM	crypto/rand
+func:math/rand.	RANDOM	math/rand
+func:math/rand/v2.	RANDOM	math/rand/v2
+# ---- encoding / serialisation / compression
+func:encoding/base64.	ENCODING	base64
+func:encoding/base32.	ENCODING	base32
+func:encoding/hex.	ENCODING	hex
+func:encoding/ascii85.	ENCODING	ascii85
+func:encoding/json.	SERIALIZATION	JSON
+func:encoding/gob.	SERIALIZATION	gob
+func:encoding/xml.	SERIALIZATION	XML
+pkg:google.golang.org/protobuf	SERIALIZATION	protobuf
+pkg:github.com/vmihailenco/msgpack	SERIALIZATION	msgpack
+func:compress/	COMPRESSION	compress/*
+pkg:github.com/klauspost/compress	COMPRESSION	klauspost/compress
+pkg:github.com/golang/snappy	COMPRESSION	snappy
+func:archive/zip.	ARCHIVE	zip
+func:archive/tar.	ARCHIVE	tar
+# ---- files
+func:os.ReadFile	FILE_READ	os.ReadFile
+func:os.Open	FILE_READ	os.Open/OpenFile
+func:io/ioutil.ReadFile	FILE_READ	ioutil.ReadFile
+func:os.(*File).Read	FILE_READ	File.Read
+func:os.WriteFile	FILE_WRITE	os.WriteFile
+func:os.Create	FILE_WRITE	os.Create/CreateTemp
+func:os.OpenFile	FILE_WRITE	os.OpenFile
+func:io/ioutil.WriteFile	FILE_WRITE	ioutil.WriteFile
+func:io/ioutil.TempFile	FILE_WRITE	ioutil.TempFile
+func:os.(*File).Write	FILE_WRITE	File.Write
+func:os.Rename	FILE_WRITE	os.Rename
+func:os.Chmod	FILE_WRITE	os.Chmod
+func:os.Chtimes	DEFENSE_EVASION	os.Chtimes (timestomping)
+func:os.Mkdir	FILE_WRITE	os.Mkdir/MkdirAll/MkdirTemp
+func:os.Symlink	FILE_WRITE	os.Symlink
+func:os.Remove	FILE_DELETE	os.Remove/RemoveAll
+func:os.Truncate	FILE_DELETE	os.Truncate
+func:syscall.DeleteFile	FILE_DELETE	DeleteFile
+func:golang.org/x/sys/windows.DeleteFile	FILE_DELETE	DeleteFile
+func:golang.org/x/sys/windows.MoveFileEx	SELF_DELETE	MoveFileEx (delete-on-reboot)
+func:golang.org/x/sys/windows.SetFileAttributes	DEFENSE_EVASION	hides files
+func:os.ReadDir	FILE_ENUM	os.ReadDir
+func:os.(*File).Readdir	FILE_ENUM	File.Readdir
+func:os.(*File).ReadDir	FILE_ENUM	File.ReadDir
+func:path/filepath.Walk	FILE_ENUM	filepath.Walk/WalkDir
+func:path/filepath.Glob	FILE_ENUM	filepath.Glob
+func:io/fs.WalkDir	FILE_ENUM	fs.WalkDir
+func:io/fs.Glob	FILE_ENUM	fs.Glob
+func:io/ioutil.ReadDir	FILE_ENUM	ioutil.ReadDir
+func:embed.FS.	EMBED	reads embedded files
+# ---- host recon / environment
+func:os.Hostname	RECON	hostname
+func:os/user.	RECON	current user
+func:os.Getpid	RECON	pid
+func:os.Getppid	RECON	parent pid (sandbox checks)
+func:os.Getuid	RECON	uid
+func:os.Geteuid	RECON	euid (privilege check)
+func:os.Executable	RECON	own path (self-copy / self-delete)
+func:os.Getwd	ENV	working dir
+func:os.Getenv	ENV	os.Getenv
+func:os.LookupEnv	ENV	os.LookupEnv
+func:os.Environ	ENV	os.Environ
+func:os.UserHomeDir	ENV	home dir
+func:os.UserConfigDir	ENV	config dir
+func:os.UserCacheDir	ENV	cache dir
+func:os.TempDir	ENV	temp dir
+func:syscall.GetComputerName	RECON	GetComputerName
+func:golang.org/x/sys/windows.GetComputerName	RECON	GetComputerName
+func:golang.org/x/sys/windows.GetUserName	RECON	GetUserName
+func:golang.org/x/sys/windows.RtlGetVersion	RECON	OS version
+func:golang.org/x/sys/windows.GetSystemDirectory	RECON	system directory
+func:golang.org/x/sys/unix.Uname	RECON	uname
+func:golang.org/x/sys/unix.Sysinfo	RECON	sysinfo
+pkg:github.com/shirou/gopsutil	RECON	gopsutil host/process info
+pkg:github.com/elastic/go-sysinfo	RECON	go-sysinfo
+pkg:github.com/denisbrodbeck/machineid	RECON	machine id
+pkg:github.com/mitchellh/go-ps	PROCESS_ENUM	process list
+func:os.FindProcess	PROCESS_ENUM	FindProcess
+func:os.(*Process).Kill	PROCESS_KILL	Process.Kill
+func:os.(*Process).Signal	PROCESS_KILL	Process.Signal
+func:syscall.Kill	PROCESS_KILL	kill(2)
+func:golang.org/x/sys/windows.TerminateProcess	PROCESS_KILL	TerminateProcess
+func:golang.org/x/sys/windows.CreateToolhelp32Snapshot	PROCESS_ENUM	toolhelp snapshot
+func:golang.org/x/sys/windows.Process32	PROCESS_ENUM	Process32First/Next
+func:golang.org/x/sys/windows.EnumProcesses	PROCESS_ENUM	EnumProcesses
+func:golang.org/x/sys/windows.OpenProcess	PROCESS_ENUM	OpenProcess
+# ---- windows internals
+func:golang.org/x/sys/windows/registry.	REGISTRY	registry package
+func:syscall.RegOpenKeyEx	REGISTRY	RegOpenKeyEx
+func:syscall.RegQueryValueEx	REGISTRY	RegQueryValueEx
+func:golang.org/x/sys/windows.Reg	REGISTRY	Reg* APIs
+func:golang.org/x/sys/windows/svc/mgr.	SERVICE	service manager
+func:golang.org/x/sys/windows/svc.	SERVICE	runs as a service
+func:golang.org/x/sys/windows.OpenSCManager	SERVICE	OpenSCManager
+func:golang.org/x/sys/windows.CreateService	SERVICE	CreateService
+func:syscall.NewLazyDLL	WINAPI_DYNAMIC	syscall.NewLazyDLL
+func:syscall.(*LazyDLL).	WINAPI_DYNAMIC	LazyDLL.NewProc
+func:syscall.(*LazyProc).	WINAPI_DYNAMIC	LazyProc.Call
+func:syscall.LoadLibrary	WINAPI_DYNAMIC	LoadLibrary
+func:syscall.LoadDLL	WINAPI_DYNAMIC	LoadDLL
+func:syscall.MustLoadDLL	WINAPI_DYNAMIC	MustLoadDLL
+func:syscall.GetProcAddress	WINAPI_DYNAMIC	GetProcAddress
+func:syscall.(*DLL).	WINAPI_DYNAMIC	DLL.FindProc
+func:syscall.(*Proc).	WINAPI_DYNAMIC	Proc.Call
+func:golang.org/x/sys/windows.NewLazyDLL	WINAPI_DYNAMIC	windows.NewLazyDLL
+func:golang.org/x/sys/windows.NewLazySystemDLL	WINAPI_DYNAMIC	windows.NewLazySystemDLL
+func:golang.org/x/sys/windows.(*LazyDLL).	WINAPI_DYNAMIC	LazyDLL
+func:golang.org/x/sys/windows.(*LazyProc).	WINAPI_DYNAMIC	LazyProc.Call
+func:golang.org/x/sys/windows.LoadLibrary	WINAPI_DYNAMIC	LoadLibrary
+func:golang.org/x/sys/windows.GetProcAddress	WINAPI_DYNAMIC	GetProcAddress
+func:syscall.Syscall	SYSCALL_DIRECT	syscall.Syscall*/SyscallN
+func:syscall.SyscallN	SYSCALL_DIRECT	syscall.SyscallN
+func:golang.org/x/sys/windows.VirtualAlloc	MEMORY_MANIPULATION	VirtualAlloc
+func:golang.org/x/sys/windows.VirtualProtect	MEMORY_MANIPULATION	VirtualProtect
+func:golang.org/x/sys/windows.VirtualAllocEx	INJECTION	VirtualAllocEx
+func:golang.org/x/sys/windows.VirtualProtectEx	INJECTION	VirtualProtectEx
+func:golang.org/x/sys/windows.WriteProcessMemory	INJECTION	WriteProcessMemory
+func:golang.org/x/sys/windows.CreateRemoteThread	INJECTION	CreateRemoteThread
+func:golang.org/x/sys/windows.QueueUserAPC	INJECTION	QueueUserAPC
+func:golang.org/x/sys/windows.SetThreadContext	INJECTION	SetThreadContext
+func:golang.org/x/sys/windows.OpenProcessToken	PRIVILEGE	OpenProcessToken
+func:golang.org/x/sys/windows.AdjustTokenPrivileges	PRIVILEGE	AdjustTokenPrivileges
+func:golang.org/x/sys/windows.DuplicateTokenEx	PRIVILEGE	DuplicateTokenEx
+func:golang.org/x/sys/windows.ImpersonateLoggedOnUser	PRIVILEGE	ImpersonateLoggedOnUser
+func:golang.org/x/sys/windows.LookupPrivilegeValue	PRIVILEGE	LookupPrivilegeValue
+func:golang.org/x/sys/windows.CreateMutex	MUTEX	CreateMutex
+func:golang.org/x/sys/windows.IsDebuggerPresent	ANTI_ANALYSIS	IsDebuggerPresent
+func:golang.org/x/sys/windows.CreateNamedPipe	NAMED_PIPE	named pipe server
+func:golang.org/x/sys/unix.Mmap	MEMORY_MANIPULATION	mmap
+func:golang.org/x/sys/unix.Mprotect	MEMORY_MANIPULATION	mprotect
+func:syscall.Mmap	MEMORY_MANIPULATION	mmap
+func:syscall.Mprotect	MEMORY_MANIPULATION	mprotect
+func:syscall.PtraceAttach	INJECTION	ptrace attach
+func:golang.org/x/sys/unix.PtraceAttach	INJECTION	ptrace attach
+func:golang.org/x/sys/unix.MemfdCreate	MEMORY_MANIPULATION	memfd_create (fileless exec)
+func:syscall.Setuid	PRIVILEGE	setuid
+func:syscall.Setsid	EXEC	setsid (daemonise)
+func:debug/pe.	PE_LOAD	parses PE images
+func:debug/elf.	PE_LOAD	parses ELF images
+func:plugin.Open	PLUGIN_LOAD	plugin.Open
+# ---- timing
+func:time.Sleep	SLEEP	time.Sleep
+func:time.NewTicker	SLEEP	time.NewTicker
+func:time.Tick	SLEEP	time.Tick
+func:time.NewTimer	SLEEP	time.NewTimer
+func:time.AfterFunc	SLEEP	time.AfterFunc
+# ---- misc
+func:runtime.cgocall	CGO	cgo call
+func:os/signal.Notify	EXEC	signal handling (daemon behaviour)

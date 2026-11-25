@@ -1,0 +1,62 @@
+# String rules: applied to every string literal referenced by a function.
+# java-regex<TAB>tag<TAB>capability (or -)<TAB>weight<TAB>note
+#
+# ---- network indicators
+(?i)\bhttps?://[^\s"'<>]{4,}	url	NETWORK_IOC	6	URL
+(?<![\d.])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?::\d{2,5})?(?![\d.])	ipv4	NETWORK_IOC	8	IPv4 address
+(?i)[a-z2-7]{16,56}\.onion\b	onion	PROXY_TUNNEL	25	Tor hidden service
+(?i)\b(?:wss?|tcp|udp|socks5h?|quic|kcp)://[^\s"']{3,}	c2-uri	NETWORK_IOC	10	non-HTTP transport URI
+(?i)api\.telegram\.org|/bot\d{6,}:[A-Za-z0-9_-]{20,}	telegram	CHAT_C2	25	Telegram bot API / token
+(?i)discord(?:app)?\.com/api/webhooks	discord-webhook	CHAT_C2	25	Discord webhook
+(?i)hooks\.slack\.com	slack-webhook	CHAT_C2	20	Slack webhook
+(?i)\b(?:pastebin\.com|paste\.ee|hastebin|ghostbin|transfer\.sh|anonfiles|gofile\.io|file\.io|0x0\.st|webhook\.site|ngrok\.io|ngrok-free\.app|trycloudflare\.com|requestbin|interact\.sh|oast\.)	exfil-service	EXFIL_SERVICE	20	paste/file-share/tunnel service
+(?i)\b(?:ip-api\.com|ipinfo\.io|api\.ipify\.org|icanhazip\.com|checkip\.amazonaws\.com|ifconfig\.me|myexternalip)	ip-check	RECON	12	external IP lookup
+(?i)Mozilla/5\.0|User-Agent	user-agent	USER_AGENT	3	hard-coded User-Agent
+[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}	email	-	3	e-mail address
+# ---- execution / shells
+(?i)\b(?:cmd(?:\.exe)?\s*/[ck]|powershell(?:\.exe)?|pwsh(?:\.exe)?|/bin/(?:ba|z|da)?sh|bash\s+-c|sh\s+-c|wscript|cscript|mshta|rundll32|regsvr32|wmic\b|certutil|bitsadmin|msiexec)	shell	SHELL	12	shell / LOLBin
+(?i)(?:-e(?:nc(?:odedcommand)?)?\s+[A-Za-z0-9+/=]{20,}|FromBase64String|\bIEX\b|Invoke-Expression|DownloadString|DownloadFile|Invoke-WebRequest|Net\.WebClient)	download-cradle	SHELL	20	PowerShell cradle / encoded command
+(?i)\b(?:chmod\s+(?:\+x|[0-7]{3,4})|nohup|setsid|disown)\b	unix-exec	EXEC	8	unix execution helper
+(?i)\b(?:whoami|ipconfig|systeminfo|net\s+(?:user|group|localgroup|view|share)|tasklist|netstat|nltest|arp\s+-a|uname\s+-a|ifconfig|quser|qwinsta|query\s+user)\b	recon-cmd	RECON	10	recon command
+(?i)\b(?:taskkill|pkill|killall)\b	kill-cmd	PROCESS_KILL	10	process kill command
+# ---- persistence
+(?i)software\\microsoft\\windows\\currentversion\\(?:run|runonce|policies\\explorer\\run)	run-key	PERSISTENCE	25	Run key
+(?i)\\(?:start menu\\programs\\startup|microsoft\\windows\\start menu)	startup-folder	PERSISTENCE	20	Startup folder
+(?i)\bschtasks(?:\.exe)?\b|\\Microsoft\\Windows\\Task Scheduler|/create\s+/tn	schtasks	SCHEDULED_TASK	20	scheduled task
+(?i)winlogon\\(?:shell|userinit)|image file execution options|appinit_dlls|\\Environment\\UserInitMprLogonScript	winlogon	PERSISTENCE	25	Winlogon/IFEO/AppInit persistence
+(?i)\bsc(?:\.exe)?\s+(?:create|config|start)\b|New-Service	service-cmd	SERVICE	15	service creation
+(?i)crontab|/etc/cron|/var/spool/cron|systemctl\s+enable|/etc/systemd/system|\.bashrc|\.bash_profile|/etc/profile|/etc/rc\.local|/etc/init\.d|LaunchAgents|LaunchDaemons|launchctl\s+load	unix-persistence	PERSISTENCE	18	unix/macOS persistence
+(?i)\bHKEY_(?:LOCAL_MACHINE|CURRENT_USER|USERS|CLASSES_ROOT)\b|\bHK(?:LM|CU)\b|^SOFTWARE\\	registry-path	REGISTRY	8	registry path
+# ---- injection / evasion
+(?i)\b(?:VirtualAlloc(?:Ex)?|VirtualProtect(?:Ex)?|WriteProcessMemory|CreateRemoteThread(?:Ex)?|NtCreateThreadEx|QueueUserAPC|RtlCreateUserThread|NtMapViewOfSection|NtUnmapViewOfSection|ZwUnmapViewOfSection|SetThreadContext|NtQueueApcThread|NtAllocateVirtualMemory|NtProtectVirtualMemory|NtWriteVirtualMemory|CreateFiber|ConvertThreadToFiber|EnumSystemLocales|UuidFromString)\b	injection-api	INJECTION	25	injection API name
+(?i)\b(?:EtwEventWrite|AmsiScanBuffer|AmsiInitialize|NtTraceEvent|amsi\.dll)\b	amsi-etw	DEFENSE_EVASION	25	AMSI/ETW patching
+(?i)\b(?:IsDebuggerPresent|CheckRemoteDebuggerPresent|NtQueryInformationProcess|OutputDebugString|NtSetInformationThread)\b	anti-debug	ANTI_ANALYSIS	15	anti-debug API
+(?i)\b(?:vbox|virtualbox|vmware|vmtools|qemu|xen|parallels|sandboxie|SbieDll|cuckoo|wireshark|procmon|procexp|x64dbg|x32dbg|ollydbg|ida64|idaq|ghidra|processhacker|fiddler|joeboxserver|vboxservice|vmtoolsd)\b	anti-vm	ANTI_ANALYSIS	15	VM / sandbox / analysis tool name
+(?i)Set-MpPreference|DisableRealtimeMonitoring|Add-MpPreference|ExclusionPath|\bWinDefend\b|MsMpEng|Windows Defender	defender	DEFENSE_EVASION	25	Defender tampering
+(?i)\b(?:wevtutil\s+cl|Clear-EventLog|auditpol)\b	log-clear	DEFENSE_EVASION	25	log clearing
+(?i)\battrib\s+\+[hs]|icacls|takeown	attrib	DEFENSE_EVASION	10	file hiding / ACL changes
+(?i)\b(?:GetAsyncKeyState|SetWindowsHookEx[AW]?|GetKeyboardState|GetKeyState|MapVirtualKey|ToUnicodeEx)\b	keylog-api	KEYLOG	25	keylogging API
+(?i)\b(?:BitBlt|GetDC|GetDesktopWindow|CreateCompatibleBitmap|GetDIBits)\b	screen-api	SCREEN_CAPTURE	15	screen capture API
+(?i)\b(?:OpenClipboard|GetClipboardData|SetClipboardData)\b	clipboard-api	CLIPBOARD	12	clipboard API
+(?i)\b(?:AdjustTokenPrivileges|SeDebugPrivilege|SeImpersonatePrivilege|DuplicateTokenEx|ImpersonateLoggedOnUser)\b	privilege-api	PRIVILEGE	18	privilege API
+(?i)\\\\\.\\pipe\\	named-pipe	NAMED_PIPE	10	named pipe path
+(?i)\b(?:Global|Local)\\[A-Za-z0-9_{}.-]{4,}	mutex-name	MUTEX	8	named mutex
+(?i)\b(?:kernel32|ntdll|advapi32|user32|ws2_32|wininet|winhttp|crypt32|psapi|shell32|dbghelp|iphlpapi|netapi32|secur32|bcrypt)(?:\.dll)?\b	winapi-dll	WINAPI_DYNAMIC	6	DLL name (dynamic resolution)
+# ---- credential / data theft
+(?i)Login Data|Web Data|Local State|\bCookies\b|logins\.json|key[34]\.db|cookies\.sqlite|formhistory\.sqlite|places\.sqlite|\bUser Data\b	browser-file	BROWSER_DATA	25	browser profile files
+(?i)Google\\Chrome|Chromium|BraveSoftware|Microsoft\\Edge|Opera Software|Yandex\\YandexBrowser|Mozilla\\Firefox|Vivaldi	browser-path	BROWSER_DATA	15	browser profile path
+(?i)CryptUnprotectData|\bDPAPI\b|os_crypt|encrypted_key	dpapi	CREDENTIAL_ACCESS	20	DPAPI / browser key decryption
+(?i)wallet\.dat|\bExodus\b|\bElectrum\b|MetaMask|Atomic Wallet|Ledger Live|Trust Wallet|Phantom|nkbihfbeogaeaoehlefnkodbefgpgknn|seed phrase|mnemonic	wallet	CRYPTO_WALLET	25	crypto wallet
+(?i)\.ssh[/\\](?:id_[a-z0-9]+|known_hosts)|\.aws[/\\]credentials|\.kube[/\\]config|\.docker[/\\]config\.json|\.git-credentials|\.netrc|\.npmrc|\.pypirc|filezilla|recentservers\.xml|\.vault-token	cred-file	CREDENTIAL_ACCESS	20	credential file
+(?i)/etc/(?:passwd|shadow|sudoers)|authorized_keys	unix-cred	CREDENTIAL_ACCESS	15	unix credential file
+(?i)\b(?:lsass|mimikatz|sekurlsa|NTDS\.dit)	lsass	CREDENTIAL_ACCESS	25	credential dumping
+(?i)Telegram Desktop|tdata\b|discord(?:canary|ptb)?\\Local Storage|leveldb	app-token	CREDENTIAL_ACCESS	20	messenger session data
+(?i)-----BEGIN (?:RSA |EC |OPENSSH |ENCRYPTED )?(?:PUBLIC|PRIVATE) KEY-----	embedded-key	CRYPTO_ASYMMETRIC	15	embedded key
+# ---- impact
+(?i)\bvssadmin\b|delete\s+shadows|shadowcopy|\bwbadmin\b|bcdedit|recoveryenabled|cipher\s+/w	shadow-delete	IMPACT	30	backup / shadow copy destruction
+(?i)your (?:files|data|network) (?:have been|are|has been) (?:encrypted|locked)|\bransom|decrypt(?:ion)? (?:key|tool|software)|how[_ ]to[_ ]decrypt|readme.{0,10}\.txt|\.onion/	ransom-note	IMPACT	30	ransom note text
+(?i)\b(?:stratum\+(?:tcp|ssl)|xmrig|cryptonight|randomx|nicehash|minexmr|supportxmr|nanopool|2miners)\b	miner	CRYPTOMINING	25	mining pool / miner
+# ---- staging / encoding
+(?i)\\AppData\\(?:Roaming|Local)|\\Temp\\|%APPDATA%|%TEMP%|%LOCALAPPDATA%|%PROGRAMDATA%|\\ProgramData\\|/tmp/|/dev/shm|/var/tmp	staging-path	FILE_WRITE	5	staging location
+^(?=[A-Za-z0-9+/]*[0-9+/])(?=[A-Za-z0-9+/]*[A-Z])(?=[A-Za-z0-9+/]*[a-z])[A-Za-z0-9+/]{48,}={0,2}$	base64-blob	ENCODING	6	long base64 blob
+^[0-9a-fA-F]{48,}$	hex-blob	ENCODING	5	long hex blob (key / payload)
